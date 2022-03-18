@@ -13,7 +13,7 @@ public class TestCheckoutSystem {
 //	private ElectronicScale scale;
 
 	@Before
-	private void setup() {
+	public void setup() {
 		// TODO Auto-generated method stub
 
 	}
@@ -38,11 +38,22 @@ public class TestCheckoutSystem {
 		bk.attach(cs);
 		coin.attach(cs);
 		
+		
+		coin.endConfigurationPhase();
+		
+		BanknoteSlot bks = new BanknoteSlot(true);
+		bks.endConfigurationPhase();
+		BidirectionalChannel<Banknote> bid = new BidirectionalChannel<>(null, bk);
+		UnidirectionalChannel<Banknote> sink = new UnidirectionalChannel<>(bks);
+		
+		bk.connect(bid, sink);
+		bk.endConfigurationPhase();
+		
 		try {
 			bk.accept(new Banknote(currency, 0) );
 			
 		} catch (Exception e) {
-			fail();
+			System.out.println(e);
 		}
 		
 	}
