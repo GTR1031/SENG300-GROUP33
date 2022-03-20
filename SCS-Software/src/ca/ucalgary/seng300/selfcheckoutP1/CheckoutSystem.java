@@ -12,9 +12,9 @@ public class CheckoutSystem implements CoinValidatorObserver, BanknoteValidatorO
 	private int banknoteTotal;
 	
 	// initial checkout system
-	public CheckoutSystem() {
-		currency = Currency.getInstance("CAD");
-		coinTotal = new BigDecimal("0");
+	public CheckoutSystem(Currency currency) {
+		this.currency = currency;
+		coinTotal = new BigDecimal("0.00");
 		banknoteTotal = 0;
 		totalAmount = 0;
 	}
@@ -25,11 +25,17 @@ public class CheckoutSystem implements CoinValidatorObserver, BanknoteValidatorO
 	}
 	
 	// called when customers hit the finish payment button
-	public void finish() {
+	public void finish() throws CashPaymentException {
 		double totalInserted = coinTotal.doubleValue() + (double) banknoteTotal;
+		
+		// print out the message on the screen
+		System.out.println("The total bill is: " + totalAmount);
+		System.out.println("The total cash inserted is: " + totalInserted);
 	
 		if (totalInserted < totalAmount) {
-			throw new SimulationException("Not enough");
+			throw new CashPaymentException("The payment is not enough");
+		} else {
+			System.out.printf("The chages is: %.2f\n", totalInserted-totalAmount);
 		}
 	}
 
@@ -45,7 +51,7 @@ public class CheckoutSystem implements CoinValidatorObserver, BanknoteValidatorO
 
 	@Override
 	public void validCoinDetected(CoinValidator validator, BigDecimal value) {
-		coinTotal.add(value);
+		coinTotal = coinTotal.add(value);
 	}
 
 	@Override
