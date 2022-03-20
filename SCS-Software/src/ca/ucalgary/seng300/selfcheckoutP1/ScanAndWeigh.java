@@ -21,7 +21,7 @@ public class ScanAndWeigh implements BarcodeScannerObserver, ElectronicScaleObse
 	 * @throws NullPointerException
 	 * 		If either the scanner or scale is null
 	 */
-	public ScanAndWeigh (BarcodeScanner scanner, ElectronicScale scale) throws NullPointerException {
+	public ScanAndWeigh (BarcodeScanner scanner, ElectronicScale scale) {
 		barcodeScanner = scanner;
 		electronicScale = scale;
 		
