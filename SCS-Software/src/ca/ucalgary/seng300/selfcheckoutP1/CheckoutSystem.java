@@ -1,14 +1,9 @@
-import org.lsmr.selfcheckout.devices.observers.AbstractDeviceObserver;
-import org.lsmr.selfcheckout.devices.observers.TouchScreenObserver;
-import org.lsmr.selfcheckout.devices.observers.CoinSlotObserver;
-import org.lsmr.selfcheckout.devices.observers.CoinValidatorObserver;
+package ca.ucalgary.seng300.selfcheckoutP1;
 
 import java.math.BigDecimal;
 import java.util.Currency;
-import org.lsmr.selfcheckout.*;
 import org.lsmr.selfcheckout.devices.*;
-import org.lsmr.selfcheckout.devices.observers.BanknoteSlotObserver;
-import org.lsmr.selfcheckout.devices.observers.BanknoteValidatorObserver;
+import org.lsmr.selfcheckout.devices.observers.*;
 
 public class CheckoutSystem implements CoinValidatorObserver, BanknoteValidatorObserver, TouchScreenObserver {
 	private Currency currency;
@@ -16,14 +11,20 @@ public class CheckoutSystem implements CoinValidatorObserver, BanknoteValidatorO
 	private BigDecimal coinTotal;
 	private int banknoteTotal;
 	
-	
-	public CheckoutSystem(int total) {
+	// initial checkout system
+	public CheckoutSystem() {
 		currency = Currency.getInstance("CAD");
 		coinTotal = new BigDecimal("0");
 		banknoteTotal = 0;
+		totalAmount = 0;
+	}
+	
+	// input the total bill amount when hit the checkout button
+	public void checkout_btn(double total) {
 		totalAmount = total;
 	}
 	
+	// called when customers hit the finish payment button
 	public void finish() {
 		double totalInserted = coinTotal.doubleValue() + (double) banknoteTotal;
 	
