@@ -17,9 +17,15 @@ public class ScanAndWeigh implements BarcodeScannerObserver, ElectronicScaleObse
 	private ElectronicScale scale;
 	private Map<Barcode, BarcodedProduct> productDatabase = new HashMap<>();
 	private Map<Barcode, BarcodedItem> itemDatabase = new HashMap<>();
+	private double totalWeight;
+	private double expectedWeight;
+	private BigDecimal totalPrice;
 	
-	public ScanAndWeigh() {
-		
+	public ScanAndWeigh(BarcodeScanner scanner, ElectronicScale scale) {
+		totalWeight = 0;
+		totalPrice = new BigDecimal(0);
+		this.scanner = scanner;
+		this.scale = scale;
 	}
 
 	@Override
@@ -54,8 +60,17 @@ public class ScanAndWeigh implements BarcodeScannerObserver, ElectronicScaleObse
 		double weight = item.getWeight();
 		BigDecimal price = product.getPrice();
 		
+		totalPrice.add(price);
+		expectedWeight = weight;
 		
-		
+	}
+	
+	public double getTotalWeight() {
+		return totalWeight;
+	}
+	
+	public BigDecimal getTotalPrice() {
+		return totalPrice;
 	}
 
 }
