@@ -1,3 +1,4 @@
+package ca.ucalgary.seng300.selfcheckoutP1;
 import org.lsmr.selfcheckout.devices.observers.AbstractDeviceObserver;
 import org.lsmr.selfcheckout.devices.observers.TouchScreenObserver;
 import org.lsmr.selfcheckout.devices.observers.CoinSlotObserver;

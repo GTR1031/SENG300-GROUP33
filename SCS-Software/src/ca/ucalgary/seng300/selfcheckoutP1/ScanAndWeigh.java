@@ -1,3 +1,4 @@
+package ca.ucalgary.seng300.selfcheckoutP1;
 import org.lsmr.selfcheckout.Barcode;
 import org.lsmr.selfcheckout.devices.AbstractDevice;
 import org.lsmr.selfcheckout.devices.BarcodeScanner;
