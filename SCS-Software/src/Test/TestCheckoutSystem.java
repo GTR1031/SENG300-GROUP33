@@ -8,6 +8,7 @@ import java.util.*;
 
 import org.lsmr.selfcheckout.*;
 import org.lsmr.selfcheckout.devices.*;
+import org.lsmr.selfcheckout.devices.observers.BanknoteSlotObserver;
 import org.lsmr.selfcheckout.products.BarcodedProduct;
 
 import ca.ucalgary.seng300.selfcheckoutP1.*;
@@ -31,6 +32,7 @@ public class TestCheckoutSystem {
 	
 	// self-checkout station
 	private SelfCheckoutStation scs;
+	private ScanAndWeigh scanAndScaleObs;
 	private CheckoutSystem checkout;
 
 	@Before
@@ -52,7 +54,7 @@ public class TestCheckoutSystem {
 		
 		Barcode barcode1 = new Barcode(code1);		// barcode for item1/product1 = '0001'
 		Barcode barcode2 = new Barcode(code2);		// barcode for item2/product2 = '0002'
-		Barcode barcode3 = new Barcode(code3);		// barcode for item3/product3 = '0003'	
+		Barcode barcode3 = new Barcode(code3);		// barcode for item3/product3 = '0003'
 
 		// setup all products
 		product1 = new BarcodedProduct(barcode1, "Product 1", new BigDecimal("10"));
@@ -121,12 +123,14 @@ public class TestCheckoutSystem {
 		scs = new SelfCheckoutStation(currency, banknoteDenomin, coinDenomin, maxWeight, sensitivity);
 		
 		// create observer objects
-		ScanAndWeigh scanAndScaleObs = new ScanAndWeigh(allProduct, allItem);
-		checkout = new CheckoutSystem();
+		scanAndScaleObs = new ScanAndWeigh(allProduct, allItem);
+		checkout = new CheckoutSystem(currency);
+		BanknoteSlotObserver banknoteslotobs = new BanknoteSlotObs();
 		
 		// attach observers
 		scs.scanner.attach(scanAndScaleObs);
 		scs.scale.attach(scanAndScaleObs);
+		scs.banknoteInput.attach(banknoteslotobs);
 		scs.banknoteValidator.attach(checkout);
 		scs.coinValidator.attach(checkout);
 	}
@@ -137,11 +141,20 @@ public class TestCheckoutSystem {
 			scs.scanner.scan(item1);
 			scs.scale.add(item1);
 			
+			// here should use 
+			// checkout.checkout_btn(scanAndScaleObs.getTotal());
+			// or other mehtod that can get the total bill amount
 			checkout.checkout_btn(product1.getPrice().doubleValue());
 			
-			scs.banknoteValidator.accept(new Banknote(currency, 10));
-			scs.coinValidator.accept(dime);
+			// make payment
+			scs.banknoteInput.accept(banknote_one);
+			scs.banknoteInput.accept(banknote_fifty);
+			scs.coinValidator.accept(loonie);
+			scs.coinValidator.accept(penny);
+			scs.coinValidator.accept(penny);
 			
+			
+			// customer finish insert banknote/coin
 			checkout.finish();
 			
 		} catch (Exception e) {
