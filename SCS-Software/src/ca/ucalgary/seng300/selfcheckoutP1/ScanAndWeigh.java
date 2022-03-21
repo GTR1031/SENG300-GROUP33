@@ -1,3 +1,5 @@
+package ca.ucalgary.seng300.selfcheckoutP1;
+
 import java.util.Map;
 import java.util.HashMap;
 import org.lsmr.selfcheckout.Barcode;
