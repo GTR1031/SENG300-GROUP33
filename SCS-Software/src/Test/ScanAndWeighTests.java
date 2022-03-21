@@ -34,15 +34,11 @@ public class ScanAndWeighTests {
 		scanner = new BarcodeScanner();
 		scale = new ElectronicScale(testWeightLimit, testSensitivity);
 		
-		// Create instance of software
-		new ScanAndWeigh(scanner, scale);
-		
 		// Populate maps
 		// Barcodes
 		Barcode barcode1 = new Barcode(new Numeral[001]);
 		Barcode barcode2 = new Barcode(new Numeral[002]);
 		Barcode barcode3 = new Barcode(new Numeral[003]);
-		
 		// BarcodedItems
 		BarcodedItem item1 = new BarcodedItem(barcode1, 10);
 		BarcodedItem item2 = new BarcodedItem(barcode2, 5);
@@ -60,6 +56,9 @@ public class ScanAndWeighTests {
 		productDatabase.put(barcode2, product2);
 		itemDatabase.put(barcode3, item3);
 		productDatabase.put(barcode3, product3);
+		
+		// Create instance of software
+		new ScanAndWeigh(productDatabase, itemDatabase);
 		
 	}
 	
