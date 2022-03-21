@@ -91,6 +91,7 @@ public class SoftwareTest {
 		productDatabase.put(barcode2, product2);
 		itemDatabase.put(barcode3, item3);
 		productDatabase.put(barcode3, product3);
+
 		
 	}
 	
@@ -156,7 +157,7 @@ public class SoftwareTest {
 			// here should use 
 			// checkout.checkout_btn(scanAndScaleObs.getTotal());
 			// or other mehtod that can get the total bill amount
-			checkout.checkout_btn(product1.getPrice().doubleValue());
+			checkout.checkout_btn(product1.getPrice());
 			
 			// make payment
 			scs.banknoteInput.accept(banknote_one);
@@ -173,5 +174,66 @@ public class SoftwareTest {
 			System.out.println(e);
 		}
 		
+	}
+	
+	
+	/*
+	 * Test case should throw a SimulationException as the item being scanned does not match
+	 * the item being added to the scale.
+	 */
+	@Test	(expected = SimulationException.class)
+	public void testWeightChangedFail() {
+		scs.scanner.scan(item1);
+		scs.scale.add(item2);
+		fail();
+	}
+	
+	/*
+	 * Test case to see if the weight is changed in the ScanAndWeigh class successfully after
+	 * scanning and adding an item. 
+	 */
+	@Test
+	public void testWeightChangedSuccess() {
+		scs.scanner.scan(item1);
+		scs.scale.add(item1);
+		scanAndScaleObs.weightChanged(scs.scale, item1.getWeight());
+		assertEquals("Weight on scale should equal weight of item.", item1.getWeight(), scanAndScaleObs.getTotalWeight(), scs.scale.getSensitivity());
+	}
+	
+	/*
+	 * Check that the totalPrice is updated correctly after adding two items.
+	 */
+	@Test
+	public void testPriceUpdate() {
+		scanAndScaleObs.barcodeScanned(scs.scanner, product1.getBarcode());
+		scanAndScaleObs.barcodeScanned(scs.scanner, product2.getBarcode());
+			
+		BigDecimal totalPrice = product1.getPrice().add(product2.getPrice());
+		try {
+			assertEquals("Total price should be updated to product1's price + product2's price.", totalPrice, scanAndScaleObs.getTotalPrice());
+		}
+		catch (Exception e) {
+			fail();
+		}
+	}
+	
+	
+	/*
+	 * Test case to ensure a CashPaymentException is thrown when the checkout is finished
+	 * but the total amount inserted is less than the total cost.
+	 */
+	@Test	(expected = CashPaymentException.class)
+	public void testCheckoutBtn() {
+		scanAndScaleObs.barcodeScanned(scs.scanner, product1.getBarcode());
+		scanAndScaleObs.barcodeScanned(scs.scanner, product2.getBarcode());
+		
+		
+		checkout.checkout_btn(scanAndScaleObs.getTotalPrice());
+		try {
+			checkout.finish();
+		}
+		catch (CashPaymentException e) {
+
+		}
 	}
 }

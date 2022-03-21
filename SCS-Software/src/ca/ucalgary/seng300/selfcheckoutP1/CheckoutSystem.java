@@ -35,8 +35,8 @@ public class CheckoutSystem implements CoinValidatorObserver, BanknoteValidatorO
 	}
 	
 	// input the total bill amount when hit the checkout button
-	public void checkout_btn(double total) {
-		totalAmount = total;
+	public void checkout_btn(BigDecimal total) {
+		totalAmount = total.doubleValue();
 	}
 	
 	// called when customers hit the finish payment button

@@ -61,7 +61,6 @@ public class ScanAndWeigh implements BarcodeScannerObserver, ElectronicScaleObse
 	@Override
 	public void overload(ElectronicScale scale) {
 		System.out.println("The scale is overloaded. Please remove items.");
-		
 	}
 
 	@Override
