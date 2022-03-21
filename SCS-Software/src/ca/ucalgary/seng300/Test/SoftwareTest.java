@@ -11,7 +11,7 @@
  * Nhat Truong
  */
 
-package Test;
+package ca.ucalgary.seng300.Test;
 
 import static org.junit.Assert.*;
 import org.junit.*;
