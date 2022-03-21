@@ -28,8 +28,15 @@ public class CheckoutSystem implements CoinSlotObserver, BanknoteSlotObserver, T
 
 	@Override
 	public void banknoteEjected(BanknoteSlot slot) {
+<<<<<<< Updated upstream:SCS-Software/src/CheckoutSystem.java
 		// TODO Auto-generated method stub
 		
+=======
+		Banknote ejected = slot.removeDanglingBanknote();
+
+		// print out the situation
+		System.out.println("Situation: Remove the ejected banknote " + ejected);
+>>>>>>> Stashed changes:SCS-Software/src/ca/ucalgary/seng300/selfcheckoutP1/BanknoteSlotObs.java
 	}
 
 	@Override
