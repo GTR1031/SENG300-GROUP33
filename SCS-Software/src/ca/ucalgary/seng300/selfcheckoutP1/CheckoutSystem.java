@@ -23,6 +23,7 @@ public class CheckoutSystem implements CoinValidatorObserver, BanknoteValidatorO
 	private double totalAmount;
 	private BigDecimal coinTotal;
 	private int banknoteTotal;
+	private int invalidCoinNum;
 	
 	// initial checkout system
 	public CheckoutSystem(Currency currency) {
@@ -30,6 +31,7 @@ public class CheckoutSystem implements CoinValidatorObserver, BanknoteValidatorO
 		coinTotal = new BigDecimal("0.00");
 		banknoteTotal = 0;
 		totalAmount = 0;
+		invalidCoinNum = 0;
 	}
 	
 	// input the total bill amount when hit the checkout button
@@ -42,7 +44,8 @@ public class CheckoutSystem implements CoinValidatorObserver, BanknoteValidatorO
 		//converting BigDecimal number to double
 		double totalInserted = coinTotal.doubleValue() + (double) banknoteTotal;
 		
-		// print out the message on the screen
+		// print out the message on the screen and receipt
+		System.out.println("\nShow the following message on the receipt and screnn:");
 		System.out.println("The total bill is: " + totalAmount);
 		System.out.println("The total cash inserted is: " + totalInserted);
 	
@@ -64,16 +67,19 @@ public class CheckoutSystem implements CoinValidatorObserver, BanknoteValidatorO
 
 	@Override
 	public void validCoinDetected(CoinValidator validator, BigDecimal value) {
+		System.out.println("Situation: Coin " + value + " accepted");
 		coinTotal = coinTotal.add(value);
 	}
 
 	@Override
 	public void invalidCoinDetected(CoinValidator validator) {
-		
+		System.out.println("Situation: Coin rejected!");
+		invalidCoinNum++;
 	}
 
 	@Override
 	public void validBanknoteDetected(BanknoteValidator validator, Currency currency, int value) {
+		System.out.println("Situation: Banknote " + value + " " + currency.getCurrencyCode() + " accepted");
 		banknoteTotal += value; //adding to banknoteTotal when valid
 	}
 

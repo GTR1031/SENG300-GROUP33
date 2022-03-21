@@ -31,7 +31,7 @@ public class BanknoteSlotObs implements BanknoteSlotObserver {
 		Banknote ejected = slot.removeDanglingBanknote();
 
 		// print out the situation
-		System.out.println("Situation: Remove the ejected banknote " + ejected);
+		System.out.println("Situation: Customer remove the ejected banknote " + ejected);
 	}
 
 	@Override

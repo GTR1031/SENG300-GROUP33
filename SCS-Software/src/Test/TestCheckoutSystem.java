@@ -18,8 +18,8 @@ public class TestCheckoutSystem {
 	private double weight1, weight2, weight3;
 	private BarcodedItem item1, item2, item3;
 	private BarcodedProduct product1, product2, product3;
-	private List<BarcodedProduct> allProduct = new ArrayList<BarcodedProduct>();
-	private List<BarcodedItem> allItem = new ArrayList<BarcodedItem>();
+	private Map<Barcode, BarcodedProduct> allProduct1 = new HashMap<Barcode, BarcodedProduct>();
+	private Map<Barcode, BarcodedItem> allItem1 = new HashMap<Barcode, BarcodedItem>();
 
 	// banknotes
 	private Currency currency;
@@ -69,17 +69,15 @@ public class TestCheckoutSystem {
 		item2 = new BarcodedItem(barcode2, weight2);
 		item3 = new BarcodedItem(barcode3, weight3);
 		
-		// add all products to a list
-		allProduct.add(product1);
-		allProduct.add(product2);
-		allProduct.add(product3);
+		// map all products to the hash map
+		allProduct1.put(barcode1, product1);
+		allProduct1.put(barcode2, product2);
+		allProduct1.put(barcode3, product3);
 		
-		// add all items to alist
-		allItem.add(item1);
-		allItem.add(item2);
-		allItem.add(item3);
-		
-//		ScanAndWeigh scan = new ScanAndWeigh(allProduct, allItem);
+		// map all items to the hash map
+		allItem1.put(barcode1, item1);
+		allItem1.put(barcode2, item2);
+		allItem1.put(barcode3, item3);
 	}
 	
 	@Before
@@ -123,7 +121,7 @@ public class TestCheckoutSystem {
 		scs = new SelfCheckoutStation(currency, banknoteDenomin, coinDenomin, maxWeight, sensitivity);
 		
 		// create observer objects
-		scanAndScaleObs = new ScanAndWeigh(allProduct, allItem);
+		scanAndScaleObs = new ScanAndWeigh(allProduct1, allItem1);
 		checkout = new CheckoutSystem(currency);
 		BanknoteSlotObserver banknoteslotobs = new BanknoteSlotObs();
 		
@@ -142,7 +140,7 @@ public class TestCheckoutSystem {
 			scs.scale.add(item1);
 			
 			// here should use 
-			// checkout.checkout_btn(scanAndScaleObs.getTotal());
+			// checkout.checkout_btn(scanAndScaleObs.getTotalPrice());
 			// or other mehtod that can get the total bill amount
 			checkout.checkout_btn(product1.getPrice().doubleValue());
 			
