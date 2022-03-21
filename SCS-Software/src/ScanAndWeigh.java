@@ -10,22 +10,23 @@ import org.lsmr.selfcheckout.devices.observers.ElectronicScaleObserver;
 import org.lsmr.selfcheckout.products.BarcodedProduct;
 import org.lsmr.selfcheckout.BarcodedItem;
 import org.lsmr.selfcheckout.devices.OverloadException;
+import org.lsmr.selfcheckout.devices.SimulationException;
 import java.math.BigDecimal;
 
 public class ScanAndWeigh implements BarcodeScannerObserver, ElectronicScaleObserver {
-	private BarcodeScanner scanner;
-	private ElectronicScale scale;
-	private Map<Barcode, BarcodedProduct> productDatabase = new HashMap<>();
-	private Map<Barcode, BarcodedItem> itemDatabase = new HashMap<>();
+	private Map<Barcode, BarcodedProduct> productDatabase;
+	private Map<Barcode, BarcodedItem> itemDatabase;
 	private double totalWeight;
 	private double expectedWeight;
+	private double previousWeight;
 	private BigDecimal totalPrice;
 	
-	public ScanAndWeigh(BarcodeScanner scanner, ElectronicScale scale) {
+	public ScanAndWeigh(Map<Barcode, BarcodedProduct> allProduct, Map<Barcode, BarcodedItem> allItem) {
 		totalWeight = 0;
+		previousWeight = 0;
 		totalPrice = new BigDecimal(0);
-		this.scanner = scanner;
-		this.scale = scale;
+		this.productDatabase = allProduct;
+		this.itemDatabase = allItem;
 	}
 
 	@Override
@@ -36,20 +37,25 @@ public class ScanAndWeigh implements BarcodeScannerObserver, ElectronicScaleObse
 
 	@Override
 	public void weightChanged(ElectronicScale scale, double weightInGrams) {
-		
+		if ((weightInGrams - previousWeight) == expectedWeight) {
+			previousWeight = totalWeight;
+			totalWeight = weightInGrams;
+		}
+		else {
+			throw new SimulationException("Weight added to scale does not match the expected weight.");
+		}
 		
 	}
 
 	@Override
 	public void overload(ElectronicScale scale) {
-		// TODO Auto-generated method stub
+		System.out.println("The scale is overloaded. Please remove items.");
 		
 	}
 
 	@Override
 	public void outOfOverload(ElectronicScale scale) {
-		// TODO Auto-generated method stub
-		
+		System.out.println("The scale is no longer overloaded. You may resume scanning.");
 	}
 
 	@Override
@@ -60,7 +66,7 @@ public class ScanAndWeigh implements BarcodeScannerObserver, ElectronicScaleObse
 		double weight = item.getWeight();
 		BigDecimal price = product.getPrice();
 		
-		totalPrice.add(price);
+		totalPrice = totalPrice.add(price);
 		expectedWeight = weight;
 		
 	}
