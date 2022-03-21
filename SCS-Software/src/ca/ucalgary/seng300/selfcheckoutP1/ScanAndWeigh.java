@@ -22,6 +22,7 @@ public class ScanAndWeigh implements BarcodeScannerObserver, ElectronicScaleObse
 	 * 		If either the scanner or scale is null
 	 */
 	public ScanAndWeigh (BarcodeScanner scanner, ElectronicScale scale) {
+		totalWeight = 0;
 		barcodeScanner = scanner;
 		electronicScale = scale;
 		
@@ -42,19 +43,20 @@ public class ScanAndWeigh implements BarcodeScannerObserver, ElectronicScaleObse
 	@Override
 	public void weightChanged(ElectronicScale scale, double weightInGrams) {
 		// TODO Auto-generated method stub
+		totalWeight = weightInGrams;
 		
 	}
 
 	@Override
 	public void overload(ElectronicScale scale) {
 		// TODO Auto-generated method stub
-		
+		System.out.println("Scale is Overloaded. Please remove an Item.");
 	}
 
 	@Override
 	public void outOfOverload(ElectronicScale scale) {
 		// TODO Auto-generated method stub
-		
+		System.out.println("Scale No Longer Overloaded. Please Continue Scanning.");
 	}
 
 	@Override
